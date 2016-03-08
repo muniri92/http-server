@@ -9,10 +9,13 @@ server.listen(1)
 conn, addr = server.accept()
 
 buffer_length = 8
-message_complete = True
+message_complete = False
 
-while message_complete:
+while not message_complete:
     part = conn.recv(buffer_length)
     print(part.decode('utf-8'))
     if len(part) < buffer_length:
         break
+    conn.sendall(part)
+
+conn.close()
