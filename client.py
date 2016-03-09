@@ -2,12 +2,13 @@
 import socket
 
 
+
 address = ('127.0.0.1', 5000)
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
 client.connect(address)
 
 def get_msg():
-	msg = raw_input("what would you like to send?")
+	msg = raw_input(u"what would you like to send?")
 	return msg
 
 

@@ -10,11 +10,19 @@ conn, addr = server.accept()
 buffer_length = 16
 message_complete = True
 
+def response_ok():
+	response_ok = "HTTP/1.1 200 OK"
+	conn.sendall(response_ok.decode('utf-8'))
+
+def response_error():
+	response_error = "HTTP/1.1 500 Internal Server Error"
+	conn.sendall(response_error.decode('utf-8'))
+
 while message_complete:
     part = conn.recv(buffer_length)
     print(part.decode('utf-8'))
     if not part:
         break
-    conn.sendall(part.encode('utf-8'))
+    response_ok()
 
 conn.close()
