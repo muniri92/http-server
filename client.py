@@ -22,5 +22,5 @@ if __name__ == "__main__":
     address = ('127.0.0.1', 5000)
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
     client.connect(address)
-    request = 'GET /hello.html HTTP/1.1\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\nHost: www.tutorialspoint.com\r\n\r\n"
+    request = 'GET images/JPEG_example.jpg HTTP/1.1\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\nHost: www.tutorialspoint.com\r\n\r\n'
     send()
