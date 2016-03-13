@@ -1,25 +1,26 @@
 # _*_ coding utf-8 _*_
+"""Echo Client file."""
 import socket
 
-
-
-address = ('127.0.0.1', 5000)
+address = (u'127.0.0.1', 5000)
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
 client.connect(address)
 
+
 def get_msg():
-	msg = raw_input(u"what would you like to send?")
-	return msg
+    """Ask user for message to send."""
+    msg = input(u"What would you like to send? \n")
+    return msg
 
 
 def send(msg):
-	client.sendall(msg.encode('utf-8'))
-	data = client.recv(32)
-	client.close()
-	print (data.decode('utf-8'))
-	return (data.decode('utf-8'))
-
+    """Function to send user message and recv echo from server."""
+    client.sendall(msg.encode('utf-8'))
+    data = client.recv(32)
+    print(data.decode('utf-8'))
+    return (data.decode('utf-8'))
 
 
 if __name__ == "__main__":
-	send(get_msg())
+    send(get_msg())
+    client.close()
