@@ -13,25 +13,21 @@ message_complete = True
 
 def response_ok():
     """Return a "200" OK response to client."""
-    response_ok = b'HTTP/1.1 200 OK'
-    conn.sendall(response_ok)
-    return response_ok
+    return (b'HTTP/1.1 200 OK\r\n')
 
 
 def response_error():
     """Return a "500" Error message to client."""
-    response_errors = u"HTTP/1.1 500 InternalServerError\r\n"
-    conn.sendall(response_errors.encode('utf-8'))
-    return response_errors
+    return (b'HTTP/1.1 500 InternalServerError\r\n')
 
 
 while message_complete:
     message = conn.recv(buffer_length)
     print(message.decode('utf-8'))
     if not message:
-        response_error()
+        conn.sendall(response_error())
         break
     else:
-        response_ok()
+        conn.sendall(response_ok())
 
 conn.close()
