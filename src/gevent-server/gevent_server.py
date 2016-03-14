@@ -2,6 +2,7 @@
 import socket
 import io
 import os
+import gevent
 
 address = ('127.0.0.1', 5003)
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
@@ -84,7 +85,7 @@ def response_ok(path, uri, file_type):
 
 def four_oh_four():
     """Send 404 not found message."""
-    open_file = io.open("/Users/admin-1/http_server/http-server/webroot/images/404.jpg", "rb")
+    open_file = io.open("/Users/admin-1/http_server/http-server/webroot/images/404.jpg" , "rb")
     read_file = open_file.read()
     open_file.close()
     html_response = "HTTP/1.1 400 Not Found\r\n Content-Type: image/jpeg\r\n\r\n" + read_file

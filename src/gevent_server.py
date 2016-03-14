@@ -3,11 +3,6 @@ import socket
 import io
 import os
 
-address = ('127.0.0.1', 5003)
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-server.bind(address)
-server.listen(1)
-buffer_length = 1024
 server_path = "/Users/admin-1/http_server/http-server/webroot"
 
 
@@ -15,40 +10,42 @@ def server_func():
     """Run the server."""
     try:
         while True:
-            conn, addr = server.accept()
+            data = listen(conn)
             try:
-                while True:
-                    data = conn.recv(buffer_length)
-                    if len(data) == buffer_length:
-                        # Im not positive this if statement is needed, but everything is
-                        # working so it's staying for now
-                        pass
-                    elif len(data) < buffer_length:
-                        # full request has been received
-                        try:
-                            # check for uri request for errors
-                            uri = parse_request(data)
-                            # generate response based on file type
-                            new_uri = route_uri(server_path, uri)
-                            # send response to browser/client
-                            conn.sendall(new_uri)
-                        except AttributeError:
-                            # uri missing data
-                            missing_error = "HTTP/1.1 400 Bad Request\r\n"
-                            conn.sendall(missing_error.decode('utf-8'))
-                        except NameError:
-                            # uri has unsupported method
-                            method_error = "HTTP/1.1 405 Method Not Allowed\r\n"
-                            conn.sendall(method_error.decode('utf-8'))
-                        except TypeError:
-                            # uri has http version other than 1.1
-                            version_error = "HTTP/1.1 505 Version Not Supported\r\n"
-                            conn.sendall(version_error.decode('utf-8'))
-                        conn.close()
-            except:
-                conn.close()
+                # check for uri request for errors
+                uri = parse_request(data)
+                # generate response based on file type
+                new_uri = route_uri(server_path, uri)
+            except AttributeError:
+                # uri missing data
+                missing_error = "HTTP/1.1 400 Bad Request\r\n"
+                conn.sendall(missing_error.decode('utf-8'))
+            except NameError:
+                # uri has unsupported method
+                method_error = "HTTP/1.1 405 Method Not Allowed\r\n"
+                conn.sendall(method_error.decode('utf-8'))
+            except TypeError:
+                # uri has http version other than 1.1
+                version_error = "HTTP/1.1 505 Version Not Supported\r\n"
+                conn.sendall(version_error.decode('utf-8'))
+            con.sendall(new_uri)
+            conn.close()
     except KeyboardInterrupt:
         server.close()
+    finally:
+        server.close()
+
+
+def listen(conn):
+    """Gather http request."""
+    buffer_length = 1024
+    request = ""
+    while True:
+        part = conn.recv(buffer_length)
+        request += part
+        if len(part) < buffer_length:
+            break
+    return request
 
 
 def parse_request(request):
@@ -84,7 +81,7 @@ def response_ok(path, uri, file_type):
 
 def four_oh_four():
     """Send 404 not found message."""
-    open_file = io.open("/Users/admin-1/http_server/http-server/webroot/images/404.jpg", "rb")
+    open_file = io.open("/Users/admin-1/http_server/http-server/webroot/images/404.jpg" , "rb")
     read_file = open_file.read()
     open_file.close()
     html_response = "HTTP/1.1 400 Not Found\r\n Content-Type: image/jpeg\r\n\r\n" + read_file
@@ -142,4 +139,9 @@ def route_uri(base_path, uri):
 
 
 if __name__ == "__main__":
-    server_func()
+    from gevent.server import StreamServer
+    from gevent.monkey import patch_all
+    patch_all()
+    server = StreamServer(('127.0.0.1', 5000), server_func)
+    print('Starting server on port 5000')
+    server.serve_forever()
