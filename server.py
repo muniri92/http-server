@@ -4,14 +4,6 @@ import socket
 import io
 import os
 
-# address = ('127.0.0.1', 5000)
-# server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-# server.bind(address)
-# server.listen(1)
-# conn, addr = server.accept()
-# buffer_length = 32
-# serve_path = "/Users/admin-1/http_server/http-server/webroot"
-
 
 def server_func():
     """Set server to listen and return URI."""
@@ -27,7 +19,7 @@ def server_func():
                             uri = parse_request(part)
                             print(uri)
                             file = os.path.join(server_path, uri)
-                            print file
+                            print(file)
                             opened = io.open(file, 'rb')
                             output_file = opened.read()
                             opened.close()
@@ -41,8 +33,6 @@ def server_func():
                         except AttributeError:
                             missing_error = "HTTP/1.1 400 Bad Request"
                             conn.sendall(missing_error.decode('utf-8'))
-                        except:
-                            message_sending is False
                     else:
                         conn.shutdown(socket.SHUT_RDWR)
                         break

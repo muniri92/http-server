@@ -1,16 +1,10 @@
 # _*_ coding utf-8 _*_
-
+"""Step 2."""
 import socket
 
 
-# address = ('127.0.0.1', 5000)
-# client = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-# client.connect(address)
-
-# request = "GET /index.html HTTP/1.1 \r\n"
-
-
 def send():
+    """Function to send user message and recv response from server."""
     client.sendall(request.encode('utf-8'))
     data = client.recv(32)
     client.close()
