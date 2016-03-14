@@ -19,29 +19,18 @@ def server_func():
             try:
                 while True:
                     data = conn.recv(buffer_length)
-                    if len(data) == buffer_length:
-                        # Im not positive this if statement is needed, but everything is
-                        # working so it's staying for now
-                        pass
-                    elif len(data) < buffer_length:
-                        # full request has been received
+                    if len(data) < buffer_length:
                         try:
-                            # check for uri request for errors
                             uri = parse_request(data)
-                            # generate response based on file type
                             new_uri = route_uri(server_path, uri)
-                            # send response to browser/client
                             conn.sendall(new_uri)
                         except AttributeError:
-                            # uri missing data
                             missing_error = "HTTP/1.1 400 Bad Request\r\n"
                             conn.sendall(missing_error.decode('utf-8'))
                         except NameError:
-                            # uri has unsupported method
                             method_error = "HTTP/1.1 405 Method Not Allowed\r\n"
                             conn.sendall(method_error.decode('utf-8'))
                         except TypeError:
-                            # uri has http version other than 1.1
                             version_error = "HTTP/1.1 505 Version Not Supported\r\n"
                             conn.sendall(version_error.decode('utf-8'))
                         conn.close()
@@ -122,7 +111,8 @@ def generate_html(base_path, uri):
 
 def route_uri(base_path, uri):
     """Check to see what file type GET is looking for."""
-    # We have to remove the FIRST slash in the requested uri or else it throws off os.path.join()
+    # We have to remove the FIRST slash in the requested uri or else
+    # it throws off os.path.join()
     uri_no_slash = uri.replace("/", "", 1)
     if "." not in uri:
         return generate_html(base_path, uri_no_slash)
@@ -132,7 +122,6 @@ def route_uri(base_path, uri):
         return response_ok(base_path, uri_no_slash, "text/py")
     elif ".txt" in uri:
         return response_ok(base_path, uri_no_slash, "text/plain")
-    # images
     elif ".jpg" in uri:
         return response_ok(base_path, uri_no_slash, "image/jpeg")
     elif ".png" in uri:
