@@ -8,7 +8,7 @@ def send():
     client.sendall(request.encode('utf-8'))
     data = client.recv(32)
     client.close()
-    print (data.decode('utf-8'))
+    print(data.decode('utf-8'))
     return (data.decode('utf-8'))
 
 
