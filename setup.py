@@ -10,7 +10,6 @@ setup(
     author_email="mibrah04@gmail.com",
     license="MIT",
     py_modules=["linked"],
-    package_dir={'': 'http-server'},
     install_requires=[],
     extras_require={"test": ["pytest", "pytest-xdist", "tox"]},
 )
